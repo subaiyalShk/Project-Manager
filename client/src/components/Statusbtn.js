@@ -7,33 +7,27 @@ import Icon from '@material-ui/core/Icon';
 
 
 const StatusButton = props => {
-    const [projectObj, setProjectObj] = useState(props.project)
-    const {update, reset, setReset}=props
+    const project = props.project
+    const nextStatus = props.nextStat.status
+    let update = {
+        ...project,
+        'status':nextStatus
+        
+    }
+    const [projectObj, setProjectObj] = useState(update)
     const useStyles = makeStyles((theme) => ({
         button: {
             margin: theme.spacing(1),
             width: '190px',
-            
+            backgroundColor:props.nextStat.color
         },
     }));
     const classes = useStyles();  
 
     const onClickHandler = e => {
-        let project =projectObj;
-        for(var key in update){
-            project[key]= update[key]
-        }
-        const payload={
-            project:project.project,
-            dueDate:project.dueDate,
-            completed:project.completed,
-            backlog:project.backlog,
-            inProgress:project.inProgress
-        }
-        Axios.put("http://localhost:8000/api/project/" + projectObj._id, payload)
+        Axios.put("http://localhost:8000/api/project/" + project._id, projectObj)
         .then(response => {
             console.log(response);
-            setReset(!reset);
         })
         .catch(err => {
             console.log(err);
@@ -46,7 +40,7 @@ const StatusButton = props => {
             color="primary"
             onClick={onClickHandler}
             className={classes.button}
-        >Start</Button>
+        >{props.nextStat.newStat}</Button>
     )
 }
 

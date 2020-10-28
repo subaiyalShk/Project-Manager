@@ -2,17 +2,13 @@ import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
 import ProjectCard from '../components/ProjectCard';
 
 
 
 
 const ProjectList = props => {
-    const tileData = [{img: 'image', title: 'Image', author: 'author'}, {img: 'image', title: 'Image', author: 'author'}]
     const[status, setStatus]=useState('loading')
     const useStyles = makeStyles((theme) => ({
         root: {

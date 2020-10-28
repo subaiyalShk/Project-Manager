@@ -12,14 +12,14 @@ module.exports.list = (request, response) => {
 }
 
 module.exports.create = (request, response) =>{
-    const {name, lead, startDate, deadline, description, statusLogs} = request.body;
+    console.log(request.body)
+    const {name, lead, startDate, deadline, description} = request.body;
     Project.create({
         name, 
         lead, 
         startDate,
         deadline,  
         description,  
-        statusLogs
     })
         .then(project => {
             response.json(project)
@@ -41,12 +41,14 @@ module.exports.detail = (request, response) => {
 }
 
 module.exports.update = (request, response) => {
+    console.log(request.body)
     const { id } = request.params;
-    const { name, lead, startDate, description, status, statusLogs} = request.body;
+    const { name, lead, startDate, deadline, description, status, statusLogs} = request.body;
     Project.findOneAndUpdate({_id: id},{
         name, 
         lead, 
-        startDate,  
+        startDate,
+        deadline,  
         description, 
         status, 
         statusLogs

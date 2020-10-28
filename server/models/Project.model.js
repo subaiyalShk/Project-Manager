@@ -7,7 +7,6 @@ const LogSchema = new mongoose.Schema({
             true,
             "Name is required"
         ],
-        unique:true,
         minlength:3
     },
     message:{
@@ -28,7 +27,6 @@ const ProjectSchema = new mongoose.Schema({
             true,
             "Name is required"
         ],
-        unique:true,
         minlength:3
     },
     lead:{
@@ -37,11 +35,10 @@ const ProjectSchema = new mongoose.Schema({
             true,
             "Please provide a project Lead"
         ],
-        unique:true,
         minlength:3
     },
     startDate:{
-        type: Date,
+        type: String,
         required: [
             true,
             "Project start date required"
@@ -49,7 +46,7 @@ const ProjectSchema = new mongoose.Schema({
         minlength:3
     },
     deadline:{
-        type: Date,
+        type: String,
         required: [
             true,
             "Project deadline date is required"

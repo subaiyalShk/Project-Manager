@@ -16,24 +16,33 @@ const ProjectCard = props => {
 
     const nextStat = (status) => {
         if(status=='1'){
-            return(
-                'color'
-            )
+            return({
+                color:'#FFBA00',
+                status:'2',
+                newStat:'Start'
+
+            })
         }
         else if(status=='2'){
-            return(
-                'color'
-            )
+            return({
+                color:'#0000FF',
+                status:'3',
+                newStat:'Review'
+            })
         }
         else if(status=='3'){
-            return(
-                'color'
-            )
+            return({
+                color:'#008000',
+                status:'4',
+                newStat:'Complete'
+            })
         }
         else if(status=='4'){
-            return(
-                'gray'
-            )
+            return({
+                color:'gray',
+                status:'4',
+                newStat:'Done'
+            })
         }
     }
 
@@ -105,7 +114,8 @@ const ProjectCard = props => {
         </CardContent>
         <CardActions disableSpacing>
             <StatusBtn
-                nextStatus={nextStat}
+                nextStat={nextStat(project.status)}
+                project={project}
             />
             <IconButton
             className={clsx(classes.expand, {
