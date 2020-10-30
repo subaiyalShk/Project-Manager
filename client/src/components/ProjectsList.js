@@ -9,7 +9,8 @@ import ProjectCard from '../components/ProjectCard';
 
 
 const ProjectList = props => {
-    const[status, setStatus]=useState('loading')
+    const {setReset}=props;
+    const[status, setStatus]=useState('loading');
     const useStyles = makeStyles((theme) => ({
         root: {
             display: 'flex',
@@ -42,7 +43,7 @@ const ProjectList = props => {
             </GridListTile>
             {props.projects.map((project) => (
             <GridListTile key={project.status} cols={2} rows={1.5} style={{'margin-bottom':'30px'}}>
-                <ProjectCard project={project}/>
+                <ProjectCard project={project} setReset={setReset}/>
             </GridListTile>
             ))}
         </GridList>

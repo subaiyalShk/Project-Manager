@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {navigate} from '@reach/router';
 import Avatar from '@material-ui/core/Avatar';
@@ -15,8 +15,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 
-const CreateView = props => {
-    const {setReset}=props;
+const EditView = props => {
+    const {setReset, id}=props;
     const [error, setError] = useState("");
     const [project, setProject] = useState(
         {
@@ -26,9 +26,19 @@ const CreateView = props => {
             "deadline":"",
             "description":"",
             "status":"1"
-        }
-    )
-    const onChangeHandler = (e) => {
+        })
+
+        useEffect(()=>{
+            axios.get('http://localhost:8000/api/project/'+id)
+            .then((response)=>{
+                setProject(response.data)
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        },[])
+
+        const onChangeHandler = (e) => {
         setProject({
             ...project,
             [e.target.name]:e.target.value
@@ -37,9 +47,9 @@ const CreateView = props => {
     }
 
 
-    const onSubmitHandler = (e) =>{
+    const saveHandler = (e) =>{
         e.preventDefault();
-        axios.post("http://localhost:8000/api/project", project)
+        axios.put("http://localhost:8000/api/project/"+id, project)
         .then(response=>{
             navigate('/');
             setReset((reset)=>{return(!reset)});
@@ -50,6 +60,23 @@ const CreateView = props => {
             setError(err.response.data.errmsg);
         })
     }
+
+    const deleteHandler = (e) =>{
+        e.preventDefault();
+        axios.delete("http://localhost:8000/api/project/"+id)
+        .then(response=>{
+            navigate('/');
+            setReset((reset)=>{return(!reset)});
+            console.log(response.data)
+        })
+        .catch(err =>{
+            console.log(err);
+            setError(err.response.data.errmsg);
+        })
+    }
+
+
+
     const useStyles = makeStyles((theme) => ({
         main:{
             backgroundColor:'white',
@@ -71,13 +98,17 @@ const CreateView = props => {
             width: '100%', // Fix IE 11 issue.
             marginTop: theme.spacing(3),
         },
-        submit: {
+        save: {
             margin: theme.spacing(3, 0, 2),
+        },
+        delete:{
+            margin: theme.spacing(3, 0, 2),
+            marginLeft:'15px',
             backgroundColor:'red',
             color:'white'
         },
         card:{
-            width:'100%'
+            width:'100%',
         }
     }));
     const classes = useStyles();
@@ -94,13 +125,13 @@ const CreateView = props => {
             }
             title={
                 <Typography component="h1" variant="h5">
-                    Create a new project
+                    Edit Project
                 </Typography>
                 }
         >
         </CardHeader>
         <CardContent>
-            <form className={classes.form} noValidate onSubmit={onSubmitHandler}>
+            <form className={classes.form} noValidate onSubmit={saveHandler}>
                 <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
                     <TextField
@@ -111,6 +142,7 @@ const CreateView = props => {
                     label="Project Name"
                     autoFocus
                     onChange={onChangeHandler}
+                    value={project.name}
                     />
                 </Grid>
                 <Grid item xs={12} sm={8}>
@@ -121,6 +153,7 @@ const CreateView = props => {
                     label="Project Lead"
                     name="lead"
                     onChange={onChangeHandler}
+                    value={project.lead}
                     />
                 </Grid>
                 <Grid item xs={6}>
@@ -131,6 +164,7 @@ const CreateView = props => {
                     fullWidth
                     name="startDate"
                     type="date"
+                    value={project.startDate}
                     onChange={onChangeHandler}
                     InputLabelProps={{
                         shrink: true,
@@ -145,6 +179,7 @@ const CreateView = props => {
                     type="date"
                     required
                     fullWidth
+                    value={project.deadline}
                     onChange={onChangeHandler}
                     InputLabelProps={{
                         shrink: true,
@@ -160,17 +195,25 @@ const CreateView = props => {
                     multiline
                     rows={5}
                     name="description"
+                    value={project.description}
                     onChange={onChangeHandler}
                     />
                 </Grid>
                 </Grid>
                 <Button
                     type="submit"
-                    fullWidth
                     variant="contained"
-                    className={classes.submit}
+                    className={classes.save}
                 >
-                Add Project
+                save
+                </Button>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    className={classes.delete}
+                    onClick={deleteHandler}
+                >
+                Delete
                 </Button>
             </form>
         </CardContent>
@@ -179,19 +222,4 @@ const CreateView = props => {
     );
 }
 
-export default CreateView;
-
-{/* <div>
-                            <TextField required id="standard-required" onChange={e=>{setName(e.target.value)}} label=" Project Name" />
-                        </div>
-                        <div>
-                            <TextField required id="standard-required" onChange={e=>{setLead(e.target.value)}} label="Project Lead" />
-                        </div>
-                        <div>
-                            <TextField required id="standard-required" onChange={e=>{setStartDate(e.target.value)}} label="Start Date" />
-                        </div>
-                        <div>
-                            <TextField required id="standard-required" onChange={e=>{setDeadline(e.target.value)}} label="Deadline" />
-                        </div>
-                        <div>
-                            <TextField required id="standard-required" onChange={e=>{setDescription(e.target.value)}} label="Description" /> */}
+export default EditView;

@@ -134,7 +134,7 @@ const DrawerMenu = (props) => {
             <List>
                 <ListItem button >
                 <ListItemIcon><DashboardIcon/></ListItemIcon>
-                    <Link to={'/test'}>
+                    <Link to={'/'}>
                         <ListItemText primary={'Board'} />
                     </Link>
                 </ListItem>

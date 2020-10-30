@@ -1,105 +1,70 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Component} from 'react';
 import {Link} from '@reach/router';
-import axios from 'axios';
+import { makeStyles } from '@material-ui/core/styles';
+import {Paper, Grid} from '@material-ui/core';
 
-
+import ProjectCard from '../components/ProjectCard';
+import ProjectsList from '../components/ProjectsList';
 import StatusBtn from '../components/Statusbtn';
-import Logoutbtn from '../components/Logout'
+import Logoutbtn from '../components/Logout';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+        backgroundColor : 'black',
+        'min-height':'90vh',
+        padding:'40px'
+        },
+    paper: {
+        padding: theme.spacing(2),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+        },
+    heading: {
+        color: 'white'
+    }
+}));
 
 const IndexView = props => {
-    const[projects, setProjects]=useState([]);
-    const[reset, setReset]=useState(false)
-    useEffect(()=>{
-        axios.get('http://localhost:8000/api/projects')
-        .then((response)=>{
-            setProjects(response.data)
-        })
-        .catch(err=>{
-            console.log(err);
-        })
-    },[reset])
+    const classes = useStyles();
+    const {setReset, projects}= props;
 
     return(
-        <div className="container">
-            <div className="row">
-                <div className="col-6">
-                    <h1>Project Manager</h1>
-                </div>
-        
-                <div className="col-6">
-                    <Logoutbtn/>
-                </div>
-            </div>
-            
-            <table className="table table-bordered " >
-                <thead>
-                    <th className="bg-primary">Backlog</th>  
-                    <th className="bg-warning">In Progress</th>  
-                    <th className="bg-success">Completed</th>    
-                </thead>
-                <tbody>  
-                    {projects.map((proj, index)=>{
-                        return(
-                            <tr key={index}>
-                                <td>
-                                    {proj.backlog &&
-                                        <div className="container">
-                                            <div className="row">
-                                                {proj.project}
-                                            </div>
-                                            <div className="row">
-                                                {proj.dueDate}
-                                            </div>
-                                            <div className="row">
-                                                <StatusBtn update={{
-                                                    inProgress:true,
-                                                    backlog:false,
-                                                    completed:false
-                                                }} project={proj} reset={reset} setReset={setReset}/>
-                                            </div>
-                                        </div>
-                                    }
-                                </td>
-                                <td>
-                                    {proj.inProgress &&
-                                        <div className="container">
-                                            <div className="row">
-                                                {proj.project}
-                                            </div>
-                                            <div className="row">
-                                                {proj.dueDate}
-                                            </div>
-                                            <div className="row">
-                                            <StatusBtn update={{
-                                                    inProgress:false,
-                                                    backlog:false,
-                                                    completed:true
-                                                }} project={proj} reset={reset} setReset={setReset}/>
-                                            </div>
-                                        </div>
-                                    }
-                                </td>
-                                <td>
-                                    {proj.completed &&
-                                        <div className="container">
-                                            <div className="row">
-                                                {proj.project}
-                                            </div>
-                                            <div className="row">
-                                                {proj.dueDate}
-                                            </div>
-                                            <div className="row">
-                                            <p>you deserve a cookie</p>
-                                            </div>
-                                        </div>
-                                    }
-                                </td>        
-                            </tr>
-                        )
-                    })}
-                </tbody>
-                <Link to={"/create"}>Add New Project</Link>  
-            </table>
+        <div className={classes.root}>
+        <Grid container spacing={3} >
+            <Grid item xs={12} md={3}>
+                <ProjectsList
+                    setReset={setReset} 
+                    status={'Backlog'} 
+                    color={'red'} 
+                    projects={projects.filter(project => project.status=='1')}
+                />
+            </Grid>
+            <Grid item xs={12} md={3}>
+                <ProjectsList
+                    setReset={setReset} 
+                    status={'In Progress'} 
+                    color={'#FFBA00'}
+                    projects={projects.filter(project => project.status=='2')}
+                />
+            </Grid>
+            <Grid item xs={12} md={3}>
+                <ProjectsList
+                    setReset={setReset} 
+                    status={'In Review'} 
+                    color={'blue'}
+                    projects={projects.filter(project => project.status=='3')}
+                />
+            </Grid>
+            <Grid item xs={12} md={3}>
+                <ProjectsList 
+                    setReset={setReset}
+                    status={'Completed'} 
+                    color={'green'}
+                    projects={projects.filter(project => project.status=='4')}
+                />
+            </Grid>
+        </Grid>
         </div>
     )
 }

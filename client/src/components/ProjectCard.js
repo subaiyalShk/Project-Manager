@@ -7,10 +7,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StatusBtn from '../components/Statusbtn';
 import StatusLogs from '../components/StatusLogs';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-
-
+import {navigate} from '@reach/router';
 
 const ProjectCard = props => {
+    const {setReset}= props;
     const [expanded, setExpanded] = useState(false);
     const project = props.project
 
@@ -20,7 +20,6 @@ const ProjectCard = props => {
                 color:'#FFBA00',
                 status:'2',
                 newStat:'Start'
-
             })
         }
         else if(status=='2'){
@@ -76,11 +75,12 @@ const ProjectCard = props => {
             paddingBottom:'0px'
         }
         }));
+
     const classes = useStyles();
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
-
+    
     return(
         <Card className={classes.root}>
         <CardHeader
@@ -92,21 +92,22 @@ const ProjectCard = props => {
             </Avatar>
             }
             title={project.name}
-            subheader= {"Start date: " + project.createdAt}
+            subheader= {"Updated : " + project.updatedAt}
             action={
                 <IconButton aria-label="settings">
-                    <MoreVertIcon />
+                    <MoreVertIcon onClick={()=>{ let url= 'edit/'+project._id; return(navigate(url))}}/>
                 </IconButton>
             }
         />
-        <CardContent
-            className={classes.cardDescription}
-        >
+        <CardContent className={classes.cardDescription}>
             <Typography variant="body2" color="textSecondary" component="p">
-                Project Lead : Subaiyal
+                Project Lead : {project.lead}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-                Deadline : {project.deadLine}
+                Start Date : {project.startDate}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+                Deadline : {project.deadline}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
                 {project.description} 
@@ -116,6 +117,7 @@ const ProjectCard = props => {
             <StatusBtn
                 nextStat={nextStat(project.status)}
                 project={project}
+                setReset={setReset}
             />
             <IconButton
             className={clsx(classes.expand, {

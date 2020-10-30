@@ -7,6 +7,7 @@ import Icon from '@material-ui/core/Icon';
 
 
 const StatusButton = props => {
+    const {setReset} = props;
     const project = props.project
     const nextStatus = props.nextStat.status
     let update = {
@@ -28,6 +29,7 @@ const StatusButton = props => {
         Axios.put("http://localhost:8000/api/project/" + project._id, projectObj)
         .then(response => {
             console.log(response);
+            setReset((reset)=>{return(!reset)})
         })
         .catch(err => {
             console.log(err);
