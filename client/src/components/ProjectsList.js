@@ -20,7 +20,7 @@ const ProjectList = props => {
             backgroundColor: theme.palette.background.paper,
         },
         gridList: {
-            width: 500,
+            width: '100%',
             backgroundColor:'black'
         },
     
