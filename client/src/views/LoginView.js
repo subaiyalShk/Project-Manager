@@ -104,6 +104,15 @@ export default function Login(props){
                 {
                   toggle?
                     <form onSubmit={handleLogin} className={classes.form} noValidate>
+                      <Typography variant="body2" color="textSecondary" component="p">
+                          Use the following credentials for demo : 
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary" component="p">
+                          email: subi@gmail.com
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary" component="p">
+                          password: 1234567890 
+                      </Typography>
                       <TextField
                           variant="outlined"
                           margin="normal"
