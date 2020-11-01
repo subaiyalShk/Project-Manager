@@ -9,6 +9,7 @@ import Login from './views/LoginView'
 import TestView from './views/TestView'
 import EditView from './views/EditView'
 import Menu from './components/Menu'
+import Drawer from './components/Drawer'
 
 // axios.interceptors.response.use(response => response, 
 //   ()=>navigate('/login'))
@@ -18,26 +19,29 @@ function App() {
   const[reset, setReset]=useState(false)
 
   useEffect(()=>{
-    axios.get('http://localhost:8000/api/projects')
+    axios.get('http://localhost:8000/api/projects', {withCredentials:true})
     .then((response)=>{
         setProjects(response.data)
     })
     .catch(err=>{
         console.log(err);
+        if(err.response.data.message=="Unauthorized"){
+          navigate('/login')
+      }
     })
 },[reset])
 
   return (
     <div className="App">
-      <Menu>
         <Router>
-          <Login path="/login"/>
-          <IndexView projects={projects} setReset={setReset} path="/" />
-          <CreateView setReset={setReset} path="/create" />
-          <EditView setReset={setReset} path="/edit/:id" />
-          <TestView path="/test" />
+          <Login setReset={setReset} path="/login"/>
+            <Menu path="/">
+              <IndexView projects={projects} setReset={setReset} path="/" />
+              <CreateView setReset={setReset} path="/create" />
+              <EditView setReset={setReset} path="/edit/:id" />
+              <TestView path="/test" />
+            </Menu>
         </Router>
-      </Menu>
     </div>
   );
 }

@@ -49,7 +49,7 @@ const EditView = props => {
 
     const saveHandler = (e) =>{
         e.preventDefault();
-        axios.put("http://localhost:8000/api/project/"+id, project)
+        axios.put("http://localhost:8000/api/project/"+id, project, {withCredentials:true})
         .then(response=>{
             navigate('/');
             setReset((reset)=>{return(!reset)});
@@ -57,13 +57,16 @@ const EditView = props => {
         })
         .catch(err =>{
             console.log(err);
+            if(err.response.data.message=="Unauthorized"){
+                navigate('/login')
+            }
             setError(err.response.data.errmsg);
         })
     }
 
     const deleteHandler = (e) =>{
         e.preventDefault();
-        axios.delete("http://localhost:8000/api/project/"+id)
+        axios.delete("http://localhost:8000/api/project/"+id, {withCredentials:true})
         .then(response=>{
             navigate('/');
             setReset((reset)=>{return(!reset)});
@@ -71,6 +74,9 @@ const EditView = props => {
         })
         .catch(err =>{
             console.log(err);
+            if(err.response.data.message=="Unauthorized"){
+                navigate('/login')
+            }
             setError(err.response.data.errmsg);
         })
     }

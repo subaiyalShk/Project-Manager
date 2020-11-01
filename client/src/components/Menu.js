@@ -18,6 +18,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddBoxIcon from '@material-ui/icons/AddBox';
+import Logout from './Logout'
 
 import {Link} from '@reach/router'
 
@@ -149,9 +150,7 @@ const DrawerMenu = (props) => {
             <List>
                 <ListItem button>
                 <ListItemIcon><ExitToAppIcon/></ListItemIcon>
-                <Link to={'/logout'}>
-                    <ListItemText primary={'Logout'}/>
-                </Link>
+                <Logout/>
                 </ListItem>
             </List>
         </Drawer>

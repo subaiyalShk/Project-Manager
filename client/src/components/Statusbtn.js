@@ -26,7 +26,7 @@ const StatusButton = props => {
     const classes = useStyles();  
 
     const onClickHandler = e => {
-        Axios.put("http://localhost:8000/api/project/" + project._id, projectObj)
+        Axios.put("http://localhost:8000/api/project/" + project._id, projectObj, {withCredentials:true})
         .then(response => {
             console.log(response);
             setReset((reset)=>{return(!reset)})
