@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import { navigate } from '@reach/router';
 import RegistrationForm from '../components/RegistrationForm';
-import {Box, TextField, Button, Paper, Grid, Typography, Link, Checkbox, FormControlLabel, CssBaseline, Avatar} from '@material-ui/core';
+import {Box, TextField, Button, Paper, Grid, Link, Checkbox, FormControlLabel, CssBaseline, Avatar, Typography} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 
@@ -104,6 +104,15 @@ export default function Login(props){
                 {
                   toggle?
                     <form onSubmit={handleLogin} className={classes.form} noValidate>
+                      <Typography variant="body2" color="textSecondary" component="p">
+                          Use the following credentials for demo : 
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary" component="p">
+                          email: subi@gmail.com
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary" component="p">
+                          password: 1234567890 
+                      </Typography>
                       <TextField
                           variant="outlined"
                           margin="normal"
