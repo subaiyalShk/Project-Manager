@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost/newsdb",{
+mongoose.connect("mongodb://localhost/hyperdrivedb",{
     useNewUrlParser: true,
     useUnifiedTopology:true,
     useFindAndModify:true,

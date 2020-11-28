@@ -7,26 +7,14 @@ import Icon from '@material-ui/core/Icon';
 
 
 const StatusButton = props => {
-    const {setReset} = props;
-    const project = props.project
+    const {setReset, project} = props;
     const nextStatus = props.nextStat.status
-    let update = {
-        ...project,
-        'status':nextStatus
-        
-    }
-    const [projectObj, setProjectObj] = useState(update)
-    const useStyles = makeStyles((theme) => ({
-        button: {
-            margin: theme.spacing(1),
-            width: '190px',
-            backgroundColor:props.nextStat.color
-        },
-    }));
-    const classes = useStyles();  
-
     const onClickHandler = e => {
-        Axios.put("http://localhost:8000/api/project/" + project._id, projectObj, {withCredentials:true})
+        let update = {
+            ...project,
+            'status':nextStatus
+        }
+        Axios.put("http://localhost:8000/api/project/" + project._id, update, {withCredentials:true})
         .then(response => {
             console.log(response);
             setReset((reset)=>{return(!reset)})
@@ -35,7 +23,14 @@ const StatusButton = props => {
             console.log(err);
         })
     }
-    
+    const useStyles = makeStyles((theme) => ({
+        button: {
+            margin: theme.spacing(1),
+            width: '190px',
+            backgroundColor:props.nextStat.color
+        },
+    }));
+    const classes = useStyles();  
     return (
         <Button
             variant="contained"
@@ -47,3 +42,5 @@ const StatusButton = props => {
 }
 
 export default StatusButton;
+
+// g5RV@E#rnnbg6-bB

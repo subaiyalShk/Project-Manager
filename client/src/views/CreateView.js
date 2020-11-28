@@ -39,7 +39,7 @@ const CreateView = props => {
 
     const onSubmitHandler = (e) =>{
         e.preventDefault();
-        axios.post("http://localhost:8000/api/project", project)
+        axios.post("http://localhost:8000/api/project", project, {withCredentials:true})
         .then(response=>{
             navigate('/');
             setReset((reset)=>{return(!reset)});

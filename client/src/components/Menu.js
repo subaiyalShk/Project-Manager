@@ -18,7 +18,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import Logout from './Logout'
+import Logout from './Logout';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 import {Link} from '@reach/router'
 
@@ -54,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
         flexShrink: 0,
     },
     drawerPaper: {
+        backgroundColor:'#404040',
         width: drawerWidth,
     },
     drawerHeader: {
@@ -81,6 +83,12 @@ const useStyles = makeStyles((theme) => ({
         }),
         marginLeft: 0,
     },
+    icons:{
+        color:'white'
+    },
+    text:{
+        color:'white'
+    }
 }));
 
 const DrawerMenu = (props) => {
@@ -128,29 +136,35 @@ const DrawerMenu = (props) => {
         >
             <div className={classes.drawerHeader}>
             <IconButton onClick={handleDrawerClose}>
-                {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                {theme.direction === 'ltr' ? <ChevronLeftIcon style={{'color':'white'}}/> : <ChevronRightIcon style={{'color':'white'}} />}
             </IconButton>
             </div>
             <Divider />
             <List>
                 <ListItem button >
-                <ListItemIcon><DashboardIcon/></ListItemIcon>
+                <ListItemIcon><DashboardIcon className={classes.icons} /></ListItemIcon>
                     <Link to={'/'}>
-                        <ListItemText primary={'Board'} />
+                        <ListItemText className={classes.text} primary={'Board'} />
                     </Link>
                 </ListItem>
                 <ListItem button >
-                <ListItemIcon><AddBoxIcon/></ListItemIcon>
+                <ListItemIcon><AddBoxIcon className={classes.icons} /></ListItemIcon>
                     <Link to={'/create'}>
-                        <ListItemText primary={'Create'} />
+                        <ListItemText className={classes.text} primary={'Create'} />
                     </Link>
                 </ListItem>
             </List>
             <Divider />
             <List>
                 <ListItem button>
-                <ListItemIcon><ExitToAppIcon/></ListItemIcon>
-                <Logout/>
+                    <ListItemIcon><AccountBoxIcon className={classes.icons} /></ListItemIcon>
+                    <Link to={'/profile'}>
+                        <ListItemText className={classes.text} primary={'Profile'} />
+                    </Link>
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon><ExitToAppIcon className={classes.icons} /></ListItemIcon>
+                    <Logout/>
                 </ListItem>
             </List>
         </Drawer>

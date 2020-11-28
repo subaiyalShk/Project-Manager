@@ -10,6 +10,11 @@ const UserSchema = new mongoose.Schema({
         type:String,
         minlength:[ 2, 'You gotta have a last name of more than 2 characters.']
     },
+    userName: {
+        type:String,
+        unique:true,
+        minlength:[ 2, 'Username must be minimum 2 characters.']
+    },
     email: {
         type:String,
         unique:true,

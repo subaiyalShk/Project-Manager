@@ -40,222 +40,271 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function Login(props){
-    const [firstName, setFname]=useState("");
-    const [lastName, setLname]=useState("");
-    const [email, setEmail]=useState("");
-    const [password, setPassword]= useState("");
-    const [confirmPassword, setPasswordConf]= useState("");
-    const {setReset} = props;
+  const [firstName, setFname]=useState("");
+  const [lastName, setLname]=useState("");
+  const [userName, setUserName]= useState('');
+  const [email, setEmail]=useState("");
+  const [password, setPassword]= useState("");
+  const [confirmPassword, setPasswordConf]= useState("");
+  const {setReset, setUser} = props;
+  const [err, setErr] = useState('');
+  const [toggle, setToggle]=useState(true);
 
-    const [err, setErr] = useState('');
-    const [toggle, setToggle]=useState(true);
-    
-    function handleLogin(event){
-        event.preventDefault();
-        setErr('');
-        axios.post('http://localhost:8000/api/users/login', {
-            email,
-            password
-        }, { withCredentials:true })
-        .then((response)=>{
-          console.log(response)
-          setReset((reset)=>{return(!reset)})
-          navigate('/')
-        })
-        .catch(()=>setErr('Please check your credentials !'));
+  function errorHandler(obj){
+    if(obj.errors){
+      if('password' in obj.errors){
+        return(obj.errors.password.message)
+      }else if('confirmPassword' in obj.errors){
+        return(obj.errors.confirmPassword.message)
+      }else if('email' in obj.errors){
+        return(obj.errors.email.message)
+      }else if('firstName' in obj.errors){
+        return(obj.errors.firstName.message)
+      }else if('lastName' in obj.errors){
+        return(obj.errors.lastName.message)
+      }else if('userName' in obj.errors){
+        return(obj.errors.userName.message)
+      }
+    }else if(obj.keyPattern){
+      if('email' in obj.keyPattern){
+        return('This email is already registered')
+      }else if('userName' in obj.keyPattern){
+        return('This username is already registered')
+      }
     }
+  }
+  
+  
+  function handleLogin(event){
+      event.preventDefault();
+      setErr('')
+      axios.post('http://localhost:8000/api/users/login', {
+          email,
+          password
+      }, { withCredentials:true })
+      .then((response)=>{
+        sessionStorage.setItem("user", JSON.stringify(response.data))
+        setReset((reset)=>{return(!reset)})
+        navigate('/')
+      })
+      .catch(()=>setErr('Please check your credentials !'));
+  }
 
   function handleRegister(event){
     event.preventDefault();
+    setErr('')
     axios.post('http://localhost:8000/api/users', {
       email, 
       password, 
       confirmPassword, 
       firstName, 
-      lastName
+      lastName,
+      userName
     }, {withCredentials:true})
     .then((response)=>{
-      console.log(response)
+      sessionStorage.setItem("user", JSON.stringify(response.data))
       setReset((reset)=>{return(!reset)})
       navigate('/')
     })
     .catch(err => {
-        console.log(err)
-        setErr(err)
+      setErr(()=>errorHandler(err.response.data))
     }); 
   }
     const classes = useStyles();
 
     return (
-        <div className={classes.root}>
-            <Grid container component="main" className={classes.root}>
-            <CssBaseline />
-            <Grid item xs={false} sm={4} md={7} className={classes.image} />
-            <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-                <div className={classes.paper}>
-                <Typography component="h1" variant="h5">
-                    {toggle?"Sign in":"Register"}
+      <div className={classes.root}>
+        <Grid container component="main" className={classes.root}>
+        <CssBaseline />
+        <Grid item xs={false} sm={4} md={7} className={classes.image} />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <div className={classes.paper}>
+            <Typography component="h1" variant="h5">
+              {toggle?"Sign in":"Create a Profile"}
+            </Typography>
+          {
+              err && (
+                  <p style={{color:'red'}}>{err}</p>
+              )
+          }
+          {
+            toggle?
+              <form onSubmit={handleLogin} className={classes.form} noValidate>
+                <Typography variant="body2" color="textSecondary" component="p">
+                    Use the following credentials for demo : 
                 </Typography>
-                {
-                    err && (
-                        <p style={{color:'red'}}>{err}</p>
-                    )
-                }
-                {
-                  toggle?
-                    <form onSubmit={handleLogin} className={classes.form} noValidate>
-                      <Typography variant="body2" color="textSecondary" component="p">
-                          Use the following credentials for demo : 
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary" component="p">
-                          email: subi@gmail.com
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary" component="p">
-                          password: 1234567890 
-                      </Typography>
-                      <TextField
-                          variant="outlined"
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="email"
-                          label="Email Address"
-                          name="email"
-                          autoComplete="email"
-                          autoFocus
-                          value={email}
-                          onChange={e => setEmail(e.target.value)}
-                      />
-                      <TextField
-                          variant="outlined"
-                          margin="normal"
-                          required
-                          fullWidth
-                          name="password"
-                          label="Password"
-                          type="password"
-                          id="password"
-                          autoComplete="current-password"
-                          value={password}
-                          onChange={e => setPassword(e.target.value)}
-                      />
-                      <Button
-                          type="submit"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          className={classes.submit}
-                      >
-                      Sign In
-                      </Button>
-                      <Grid container>
-                      <Grid item xs>
-                          <Link href="#" variant="body2">
-                          Forgot password?
-                          </Link>
-                      </Grid>
-                      <Grid item>
-                          <Link onClick={(e)=>{e.preventDefault();setToggle((toggle)=>{return(!toggle)})}} href="#" variant="body2">
-                          {"Don't have an account? Sign Up"}
-                          </Link>
-                      </Grid>
-                      </Grid>
-                      <Box mt={5}>
-                      </Box>
-                  </form>:
-                  <form onSubmit={handleRegister} className={classes.form} noValidate>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="First Name"
-                            name="fname"
-                            autoFocus
-                            value={firstName}
-                            onChange={e => setFname(e.target.value)}
-                        />
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            label="Last Name"
-                            name="fname"
-                            autoFocus
-                            value={lastName}
-                            onChange={e => setLname(e.target.value)}
-                        />
-                      </Grid>
-                    </Grid>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        label="Confirm Password"
-                        type="password"
-                        value={confirmPassword}
-                        onChange={e => setPasswordConf(e.target.value)}
-                    />
-                  <Button
-                      type="submit"
+                <Typography variant="body2" color="textSecondary" component="p">
+                    email: subi@gmail.com
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                    password: 1234567890 
+                </Typography>
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    autoFocus
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                />
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                />
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                >
+                Sign In
+                </Button>
+                <Grid container>
+                <Grid item xs>
+                    <Link href="#" variant="body2">
+                    Forgot password?
+                    </Link>
+                </Grid>
+                <Grid item>
+                    <Link onClick={(e)=>{e.preventDefault();setToggle((toggle)=>{return(!toggle)})}} href="#" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                    </Link>
+                </Grid>
+                </Grid>
+                <Box mt={5}>
+                </Box>
+            </form>:
+            <form onSubmit={handleRegister} className={classes.form} noValidate>
+              <Grid container>
+                <Grid item xs={12}>
+                  <TextField
+                      variant="outlined"
+                      margin="normal"
+                      required
                       fullWidth
-                      variant="contained"
-                      color="primary"
-                      className={classes.submit}
+                      id="email"
+                      label="First Name"
+                      name="fname"
+                      autoFocus
+                      value={firstName}
+                      onChange={e => setFname(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      label="Last Name"
+                      name="fname"
+                      autoFocus
+                      value={lastName}
+                      onChange={e => setLname(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      label="Username"
+                      name="userName"
+                      autoFocus
+                      value={userName}
+                      onChange={e => setUserName(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                      autoFocus
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      label="Confirm Password"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={e => setPasswordConf(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
                   >
-                  Send
+                  Register
                   </Button>
-                  <Grid container>
-                  <Grid item xs>
-                      <Link href="#" variant="body2">
-                      Forgot password?
-                      </Link>
-                  </Grid>
-                  <Grid item>
-                      <Link onClick={(e)=>{e.preventDefault();setToggle((toggle)=>{return(!toggle)})}} href="#" variant="body2">
-                      {"Login"}
-                      </Link>
-                  </Grid>
-                  </Grid>
-                  <Box mt={5}>
-                  </Box>
-              </form>
-                }
-                </div>
+                </Grid>
+              </Grid>
+            <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+              Forgot password?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link onClick={(e)=>{e.preventDefault();setToggle((toggle)=>{return(!toggle)})}} href="#" variant="body2">
+              {"Login"}
+              </Link>
             </Grid>
             </Grid>
-        </div>
-        );
+            <Box mt={5}>
+            </Box>
+          </form>
+            }
+            </div>
+        </Grid>
+        </Grid>
+      </div>
+      );
 }
 
