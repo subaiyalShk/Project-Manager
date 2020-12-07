@@ -25,12 +25,78 @@ app.use(cors({
 require('./config/mongoose.config');
 require('./routes/Project.routes')(app);
 require('./routes/Users.routes')(app);
+const {addUser, removeUser, getUser, getUsersInRoom} = require('./OnlineUsers.js')
 
-app.listen(8000, ()=>{
+const server = app.listen(8000, ()=>{
     console.log("Listening at port 8000")
 })
 
 
+const io = require("socket.io")(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+        allowedHeaders: ["my-custom-header"],
+        credentials: true
+        }
+    });
+
+let connectedClients=0;
+
+const messages = []
+io.on("connection", socket =>{
+    connectedClients++;
+    console.log(socket.id)
+    console.log("We have " + connectedClients + "connected!") 
+    
+    // Error handling can be done by passing a second argument
+    socket.on('join', ({name, room}, callback)=>{
+        console.log(name, room)
+        const {error, user} = addUser({id: socket.id, name, room});
+
+        if(error){
+            console.log(error)
+            return callback({error:'error'})
+        }    
+        
+        socket.emit('message', {user:'admin', text:`${user.name}, welcome to the room ${user.room}`})
+
+        socket.broadcast.to(user.room).emit('message', {user:'admin', text:`${user.name}, has joined!`})
+
+        socket.join(user.room);
+
+        io.to(user.room).emit('roomData', {room:user.room, users:getUsersInRoom(user.room)})
+
+        callback()
+    } )
+
+    socket.on('sendMessage', (message, callback)=> {
+        const user = getUser(socket.id)
+        io.to(user.room).emit('message', {user:user.name, text:message})
+        
+        callback()
+    })
+
+    // // This is an event listener
+    // socket.on('new message', payload => {
+    //     console.log(payload)
+    //     // messages.push(payload)
+    //     io.emit('updated messages', payload)
+    // })
+
+    // This is an event listener
+    socket.on('disconnect', ()=>{
+        const user = removeUser(socket.id)
+        
+        if(user){
+            io.to(user.room).emit('message', {user:'admin', text: `${user.name} has left`})
+            io.to(user.room).emit('roomData', {room:user.room, users:getUsersInRoom(user.room)})
+        }
+
+        connectedClients--;
+        console.log("We have " + connectedClients + "connected!")
+    })
+})
 
 
 
