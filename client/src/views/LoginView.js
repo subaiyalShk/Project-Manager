@@ -131,14 +131,14 @@ export default function Login(props){
             toggle?
               <form onSubmit={handleLogin} className={classes.form} noValidate>
                 <Typography variant="body2" color="textSecondary" component="p">
-                    Use the following credentials for demo : 
+                    Please sign up for an account if you dont have one already. Having a unique username is essential to utilize the chat features of this application. 
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                {/* <Typography variant="body2" color="textSecondary" component="p">
                     email: subi@gmail.com
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                     password: 1234567890 
-                </Typography>
+                </Typography> */}
                 <TextField
                     variant="outlined"
                     margin="normal"

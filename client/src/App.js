@@ -51,7 +51,7 @@ function App() {
               <EditView setReset={setReset} path="/edit/:id" />
               <ProfileView user={user} setUser={setUser} setReset={setReset} path="/profile"/>
               <TestView path="/test" />
-              <ChatView path="/chat/:name/:room"/>
+              <ChatView path="/chat/:name/channel/:room"/>
             </Menu>
         </Router>
     </div>

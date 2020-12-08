@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
  *   },
  * ];
  */
-export default function ImageGridList(props) {
+export default function UsersGridList(props) {
   const {users}=props
   const classes = useStyles();
 
@@ -54,37 +54,36 @@ export default function ImageGridList(props) {
         <Typography>Online</Typography>
       </div>
       <List >
-          <ScrollToBottom className={classes.chat} >
-          {
-              users.map(user =>{
-                  return(
-                      <>
-                      <ListItem key={user} alignItems="center">
-                          <ListItemAvatar>
-                          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                          </ListItemAvatar>
-                          <ListItemText
-                          primary={user.name}
-                          secondary={
-                              <React.Fragment>
-                              <Typography
-                                  component="span"
-                                  variant="body2"
-                                  className={classes.inline}
-                                  color="textPrimary"
-                              >
-                                  {/* {message.text} */}
-                              </Typography>
-
-                              </React.Fragment>
-                          }
-                          />
-                      </ListItem>
-                      </>
-                  )
-              })
-          }
-          </ScrollToBottom>
+        <ScrollToBottom className={classes.chat} >
+        {
+          users.map(user =>{
+            return(
+              <>
+              <ListItem key={user} alignItems="center">
+                <ListItemAvatar>
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                </ListItemAvatar>
+                <ListItemText
+                primary={user.name}
+                secondary={
+                  <React.Fragment>
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    className={classes.inline}
+                    color="textPrimary"
+                  >
+                    {/* {message.text} */}
+                  </Typography>
+                  </React.Fragment>
+                }
+                />
+              </ListItem>
+            </>
+            )
+          })
+        }
+        </ScrollToBottom>
       </List>
       {/* <GridList cellHeight={160} className={classes.gridList} cols={1}>
         <p>Online</p>

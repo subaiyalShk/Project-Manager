@@ -126,7 +126,7 @@ const ProjectCard = props => {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={()=>{let url='/chat/'+user.userName+'/'+project.name; navigate(url)}}
+                onClick={()=>{let url='/chat/'+user.userName+'/channel/'+project.name; navigate(url)}}
             >
                 Join
             </Button>

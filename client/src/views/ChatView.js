@@ -8,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import OnlineUsers from '../components/OnlineUsers'
 import io from 'socket.io-client';
 import Imessenger from '../components/InstantMessenger';
+import UploadedFiles from '../components/UploadedFilesList'
 
 const useStyles = makeStyles((theme) => ({
     main:{
@@ -99,16 +100,19 @@ export default function ChatView(props) {
             spacing={2}
             className={classes.main}
         >
-            <Grid item xs={3}>
-                <OnlineUsers users={onlineUsers} />
+            <Grid item xs={2}>
+                <UploadedFiles files={[1,2,3,4,5,6,7]} />
             </Grid>
-            <Grid item xs={9}  >
+            <Grid item xs={8}  >
                 <Imessenger 
                     messages={messages} 
                     message={message} 
                     setMessage={setMessage} 
                     sendMessage={sendMessage}
                 />
+            </Grid>
+            <Grid item xs={2}>
+                <OnlineUsers users={onlineUsers} />
             </Grid>
         </Grid>
     );

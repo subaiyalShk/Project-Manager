@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
 const IndexView = props => {
     const classes = useStyles();
     const {setReset, projects}= props;
+    useEffect(()=>{
+        window.scrollTo(0, 0)
+    })
 
     return(
         <div className={classes.root}>
