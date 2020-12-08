@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardHeader, CardContent, CardActions, Collapse, Avatar, IconButton, Typography} from '@material-ui/core';
+import { Card, Button, CardHeader, CardContent, CardActions, Collapse, Avatar, IconButton, Typography} from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StatusBtn from '../components/Statusbtn';
@@ -13,6 +13,7 @@ const ProjectCard = props => {
     const {setReset}= props;
     const [expanded, setExpanded] = useState(false);
     const project = props.project
+    const user = JSON.parse(sessionStorage.getItem('user'))
 
     const nextStat = (status) => {
         if(status=='1'){
@@ -119,6 +120,16 @@ const ProjectCard = props => {
                 project={project}
                 setReset={setReset}
             />
+            <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={()=>{let url='/chat/'+user.userName+'/channel/'+project.name; navigate(url)}}
+            >
+                Join
+            </Button>
             <IconButton
             className={clsx(classes.expand, {
                 [classes.expandOpen]: expanded,

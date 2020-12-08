@@ -11,6 +11,7 @@ import EditView from './views/EditView'
 import Menu from './components/Menu'
 import Drawer from './components/Drawer'
 import ProfileView from './views/ProfileView';
+import ChatView from './views/ChatView';
 
 // axios.interceptors.response.use(response => response, 
 //   ()=>navigate('/login'))
@@ -50,6 +51,7 @@ function App() {
               <EditView setReset={setReset} path="/edit/:id" />
               <ProfileView user={user} setUser={setUser} setReset={setReset} path="/profile"/>
               <TestView path="/test" />
+              <ChatView path="/chat/:name/channel/:room"/>
             </Menu>
         </Router>
     </div>
