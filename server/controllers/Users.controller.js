@@ -4,8 +4,10 @@ const jwt = require('jsonwebtoken')
 
 module.exports = {
     register(req, res){
+        console.log(req.body)
         User.create(req.body)
         .then(newUser => {
+            console.log('new user created')
             const token = jwt.sign({
                 id: newUser._id,
                 email: newUser.email

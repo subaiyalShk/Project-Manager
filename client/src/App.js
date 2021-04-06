@@ -9,9 +9,10 @@ import Login from './views/LoginView'
 import TestView from './views/TestView'
 import EditView from './views/EditView'
 import Menu from './components/Menu'
-import Drawer from './components/Drawer'
+// import Drawer from './components/Drawer'
 import ProfileView from './views/ProfileView';
 import ChatView from './views/ChatView';
+import Zoom from './views/Zoom_join'
 
 // axios.interceptors.response.use(response => response, 
 //   ()=>navigate('/login'))
@@ -45,14 +46,15 @@ function App() {
     <div className="App">
         <Router>
           <Login setUser={setUser} setReset={setReset} path="/login"/>
-            <Menu path="/">
-              <IndexView projects={projects} setReset={setReset} path="/" />
-              <CreateView setReset={setReset} path="/create" />
-              <EditView setReset={setReset} path="/edit/:id" />
-              <ProfileView user={user} setUser={setUser} setReset={setReset} path="/profile"/>
-              <TestView path="/test" />
-              <ChatView path="/chat/:name/channel/:room"/>
-            </Menu>
+          <Menu path="/">
+            <IndexView projects={projects} setReset={setReset} path="/" />
+            <CreateView setReset={setReset} path="/create" />
+            <EditView setReset={setReset} path="/edit/:id" />
+            <ProfileView user={user} setUser={setUser} setReset={setReset} path="/profile"/>
+            <TestView path="/test" />
+            <ChatView path="/chat/:name/channel/:room"/>
+          </Menu>
+          <Zoom path="/zoom"/>
         </Router>
     </div>
   );

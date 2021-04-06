@@ -2,12 +2,10 @@ import React, {useState, useEffect, Component} from 'react';
 import {Link} from '@reach/router';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
-import {Paper, Grid} from '@material-ui/core';
+import {Paper, Grid, responsiveFontSizes} from '@material-ui/core';
 
-import ProjectCard from '../components/ProjectCard';
-import ProjectsList from '../components/ProjectsList';
-import StatusBtn from '../components/Statusbtn';
-import Logoutbtn from '../components/Logout';
+import { ZoomMtg } from '@zoomus/websdk';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,60 +24,75 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const initiateMeeting = (meetConfig) => {
+    axios.post("http://localhost:4000", meetConfig)
+        .then(result => console.log(result))
+        .then(response => {
+            // setting the signature based on signature node
+            // initializing zoom call
+            ZoomMtg.init({
+                leaveUrl: meetConfig.leaveUrl,
+                isSupportAV: true,
+                success: (success) => {
+                  console.log(success)
+              
+                  ZoomMtg.join({
+                    signature: response,
+                    meetingNumber: meetConfig.meetingNumber,
+                    userName: meetConfig.userName,
+                    apiKey: meetConfig.apiKey,
+                    passWord: meetConfig.passWord,
+                    success: (success) => {
+                      console.log(success)
+                    },
+                    error: (error) => {
+                      console.log(error)
+                    }
+                  })
+              
+                },
+                error: (error) => {
+                  console.log(error)
+                }
+              })
+        }).catch(error => console.log(error))
+}
+
+const showZoomDiv = () => {
+    document.getElementById('zmmth-root')
+}
+
 const TestView = props => {
-    const[projects, setProjects]=useState([]);
-    const[reset, setReset]=useState(false)
-    const classes = useStyles();
-
+    const [signature, setSignature]=useState("");
+    const [meetingNumber, setMeetingNum] = useState("123456789")
+    
+    const meetConfig = {
+        apiKey: '2qdP9XZNRwmQ2BXL-vkCkg',
+        meetingNumber: '76864147115',
+        leaveUrl: 'https://localhost:3000/',
+        userName: 'MoCode2',
+        passWord: '0ScnXC',
+        role: 0 // 1 for host
+    };
+    // var signatureEndpoint = 'http://localhost:4000'
+    // var leaveUrl = 'http://localhost:9999'
+    // var userName = 'WebSDK'
+    // var apiKey = "2qdP9XZNRwmQ2BXL-vkCkg"
+    // var userEmail = ''
+    // var passWord = ''
     useEffect(()=>{
-        axios.get('http://localhost:8000/api/projects')
-        .then((response)=>{
-            setProjects(response.data)
-        })
-        .catch(err=>{
-            console.log(err);
-        })
-    },[reset])
-
-    const sortByStatus = (status, projects) => {
-        return(
-            projects.filter(project => project.status==status)
-        )
-    }
+        ZoomMtg.setZoomJSLib('https://source.zoom.us/1.9.1/lib', '/av');
+        ZoomMtg.preLoadWasm();
+        ZoomMtg.prepareJssdk();
+        // initiateMeeting(meetConfig);
+        
+    },[])
+    
 
     return(
-        <div className={classes.root}>
-        <Grid container spacing={3} >
-            <Grid item xs={12} md={3}>
-                <ProjectsList 
-                    status={'Backlog'} 
-                    color={'red'} 
-                    projects={projects.filter(project => project.status=='1')}
-                />
-            </Grid>
-            <Grid item xs={12} md={3}>
-                <ProjectsList 
-                    status={'In Progress'} 
-                    color={'#FFBA00'}
-                    projects={projects.filter(project => project.status=='2')}
-                />
-            </Grid>
-            <Grid item xs={12} md={3}>
-                <ProjectsList 
-                    status={'In Review'} 
-                    color={'blue'}
-                    projects={projects.filter(project => project.status=='3')}
-                />
-            </Grid>
-            <Grid item xs={12} md={3}>
-                <ProjectsList 
-                    status={'Completed'} 
-                    color={'green'}
-                    projects={projects.filter(project => project.status=='4')}
-                />
-            </Grid>
-        </Grid>
-        </div>
+        <>
+        <h1>zoom</h1>
+        </>
     )
 }
 

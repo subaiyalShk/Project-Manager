@@ -10,6 +10,7 @@ require('dotenv').config({path:__dirname + '/../.env'});
 console.log(process.env.SECRET_KEY)
 
 
+
 const app= express();
 app.use(cookieParser())
 app.use(express.json());
@@ -25,6 +26,7 @@ app.use(cors({
 require('./config/mongoose.config');
 require('./routes/Project.routes')(app);
 require('./routes/Users.routes')(app);
+require('./routes/signature_node_zoom.route')(app);
 const {addUser, removeUser, getUser, getUsersInRoom} = require('./OnlineUsers.js')
 
 const server = app.listen(8000, ()=>{
